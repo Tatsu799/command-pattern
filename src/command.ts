@@ -1,10 +1,10 @@
-import { ICommandObject } from './i-command';
+import { ICommandObject, ICommandOptions } from './i-command';
 import ICommand from './i-command';
 // import { ICommandOptions } from './i-command';
 
 export class Command implements ICommand {
   // private logger?: (msg: string) => void;
-  private history: ICommandObject[] = [];
+  private currentHistory: ICommandObject[] = [];
   private redoHistory: ICommandObject[] = [];
   // constructor(opt?: ICommandOptions) {
   //   this.logger = opt?.logger;
@@ -14,7 +14,7 @@ export class Command implements ICommand {
   async exec(command: ICommandObject): Promise<void> {
     try {
       await command.do();
-      this.history.push(command);
+      this.currentHistory.push(command);
       this.redoHistory = [];
     } catch (err) {
       console.error(err);
@@ -22,31 +22,31 @@ export class Command implements ICommand {
   }
 
   async undo(): Promise<void> {
-    if (this.history.length > 0) {
-      const command = this.history.pop();
-      await command?.undo();
+    if (this.currentHistory.length > 0) {
+      const command = this.currentHistory.pop();
       if (command) {
+        await command.undo();
         this.redoHistory.push(command);
       }
     } else {
-      console.log('No Command');
+      console.log('No History');
     }
   }
 
   async redo(): Promise<void> {
     if (this.redoHistory.length > 0) {
       const command = this.redoHistory.pop();
-      await command?.do();
       if (command) {
-        this.history.push(command);
+        await command.do();
+        this.currentHistory.push(command);
       } else {
-        console.log('No Command');
+        console.log('No History');
       }
     }
   }
 
   destroy(): void {
-    this.history = [];
+    this.currentHistory = [];
     this.redoHistory = [];
   }
 }
