@@ -5,18 +5,15 @@ export interface ICommandObject {
   undo: () => Promise<any>;
 }
 
-interface ICommandOptions {
+export interface ICommandOptions {
   logger?: (msg: string) => void;
 }
 
 export default interface ICommand {
-  constructor(opt?: ICommandOptions): void;
-
+  // constructor(): void;
+  // new (opt?: ICommandOptions): void;
   exec(commandObject: ICommandObject): Promise<void>;
-
   undo(): Promise<void>;
-
   redo(): Promise<void>;
-
   destroy(): void;
 }
