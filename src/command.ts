@@ -1,18 +1,22 @@
 import { ICommandObject, ICommandOptions } from './i-command';
 import ICommand from './i-command';
-// import { ICommandOptions } from './i-command';
 
 export class Command implements ICommand {
-  // private logger?: (msg: string) => void;
+  private logger?: (msg: string) => void;
   private currentHistory: ICommandObject[] = [];
   private redoHistory: ICommandObject[] = [];
-  // constructor(opt?: ICommandOptions) {
-  //   this.logger = opt?.logger;
-  // }
-  constructor() {}
+
+  constructor(opt?: ICommandOptions) {
+    this.logger = opt?.logger;
+    if (this.logger) {
+      this.logger('aaaaa');
+    }
+  }
 
   async exec(command: ICommandObject): Promise<void> {
     try {
+      console.log(command);
+
       await command.do();
       this.currentHistory.push(command);
       this.redoHistory = [];
