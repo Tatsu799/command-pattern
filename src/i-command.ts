@@ -10,7 +10,7 @@ export interface ICommandOptions {
 }
 
 export default interface ICommand {
-  // new (opt?: ICommandOptions): void;
+  // new (opt?: ICommandOptions): ICommand;
   // constructor(opt?: ICommandOptions): void;
   exec(commandObject: ICommandObject): Promise<void>;
   undo(): Promise<void>;
